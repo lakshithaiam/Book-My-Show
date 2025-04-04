@@ -49,64 +49,12 @@ spec:
 '''
         }
     }
-    
-    
     stages {
-        stage('Run Tests') {
-            steps {
-                container('python') {
-                    sh '''
-                        python -m venv venv
-                        source venv/bin/activate
-                        pip install --upgrade pip
-                        pip install pytest pytest-cov
-                        pytest my_tests.py --cov=. --cov-report=xml
-                    '''
-                }
-            }
-            
-        }
-        stage('SonarQube Analysis') {
-            steps {
-                container('sonar-scanner') {
-                    sh '''
-                        sonar-scanner \
-                          -Dsonar.projectKey=my-python-project \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=http://my-sonarqube-sonarqube.school-ns.svc.cluster.local:9000 \
-                          -Dsonar.login=squ_d44dbae93d898aaeeef265b100d2637dfb4802ed \
-                          -Dsonar.python.coverage.reportPaths=coverage.xml
-                    '''
-                }
-            }
-        }
-        stage('Login to Docker Registry') {
-            steps {
-                container('dind') {
-                    sh 'docker --version'
-                    sh 'sleep 10'
-                    sh 'docker login nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085 -u admin -p Changeme@2025'
-                }
-            }
-        }
         stage('Build - Tag - Push') {
             steps {
                 container('dind') {
-                    //sh 'docker build -t nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/my-new-ai-assistant:v5 .'
-                    //sh 'docker push nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/my-new-ai-assistant:v5'
-                    //sh 'docker pull nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/my-new-ai-assistant:v5'
+                    sh 'docker build -t nexus-service-for-docker-hosted-registry.bookmyshow-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1 .'
                     sh 'docker image ls'
-                }
-            }
-        }
-        stage('Deploy AI Application') {
-            steps {
-                container('kubectl') {
-                    script {
-                        dir('ai-app-deployment') {
-                            sh 'kubectl apply -f ai-assistant-deployment.yaml'
-                        }
-                    }
                 }
             }
         }
