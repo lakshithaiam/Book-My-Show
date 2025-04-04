@@ -6,11 +6,6 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: python
-    image: python:3.12-alpine
-    command:
-    - cat
-    tty: true
   - name: sonar-scanner
     image: sonarsource/sonar-scanner-cli
     command:
@@ -50,20 +45,6 @@ spec:
         }
     }
     stages {
-        stage('Build - Tag - Push') {
-            steps {
-                container('dind') {
-                    script{
-                        dir('bookmyshow-app'){
-                            sh 'docker --version'
-                            sh 'sleep 20'
-                            sh 'docker build -t nexus-service-for-docker-hosted-registry.bookmyshow-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1 .'
-                            sh 'docker image ls'
-                        }
-                    }
-                }
-            }
-        }
         stage('SonarQube Analysis') {
             steps {
                 container('sonar-scanner') {
@@ -74,6 +55,29 @@ spec:
                           -Dsonar.host.url=http://my-sonarqube-sonarqube.school-ns.svc.cluster.local:9000 \
                           -Dsonar.token=sqp_119b2cededa281d7dd5ef7f6ed0f9aab51a8da92
                     '''
+                }
+            }
+        }
+        stage('Login to Docker Registry') {
+            steps {
+                container('dind') {
+                    sh 'docker --version'
+                    sh 'sleep 10'
+                    sh 'docker login nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085 -u admin -p Changeme@2025'
+                }
+            }
+        }
+        stage('Build - Tag - Push') {
+            steps {
+                container('dind') {
+                    script{
+                        dir('bookmyshow-app'){
+                            sh 'docker build -t nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1 .'
+                            sh 'docker push nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1'
+                            sh 'docker pull nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1'
+                            sh 'docker image ls'
+                        }
+                    }
                 }
             }
         }
