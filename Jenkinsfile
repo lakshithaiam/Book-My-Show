@@ -53,6 +53,8 @@ spec:
         stage('Build - Tag - Push') {
             steps {
                 container('dind') {
+                    sh 'docker --version'
+                    sh 'sleep 10'
                     sh 'docker build -t nexus-service-for-docker-hosted-registry.bookmyshow-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1 .'
                     sh 'docker image ls'
                 }
