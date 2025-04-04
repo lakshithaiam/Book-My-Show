@@ -81,5 +81,16 @@ spec:
                 }
             }
         }
+        stage('Deploy BookMyShow Application') {
+            steps {
+                container('kubectl') {
+                    script {
+                        dir('bookmyshowapp-k8s') {
+                            sh 'kubectl apply -f bookmyshowapp-deployment.yaml'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
