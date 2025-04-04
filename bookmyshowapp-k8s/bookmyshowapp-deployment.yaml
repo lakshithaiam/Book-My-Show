@@ -14,8 +14,6 @@ spec:
       labels:
         app: bookmyshowapp
     spec:
-      imagePullSecrets:
-        - name: nexus-secret
       containers:
       - name: bookmyshowapp
         image: 127.0.0.1:30085/my-repository/bookmyshowapp:v1
