@@ -87,6 +87,7 @@ spec:
                     script {
                         dir('bookmyshowapp-k8s') {
                             sh 'kubectl apply -f bookmyshowapp-deployment.yaml'
+                            sh 'kubectl apply -f bookmyshowapp-ingress.yaml'
                         }
                     }
                 }
