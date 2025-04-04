@@ -64,5 +64,17 @@ spec:
                 }
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                container('sonar-scanner') {
+                    sh '''
+                        sonar-scanner \
+                          -Dsonar.projectKey=bookmyshow \
+                          -Dsonar.sources=. \
+                          -Dsonar.host.url=http://my-sonarqube-sonarqube.school-ns.svc.cluster.local:9000 \
+                          -Dsonar.token=sqp_119b2cededa281d7dd5ef7f6ed0f9aab51a8da92
+                    '''
+                }
+            }
     }
 }
