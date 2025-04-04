@@ -72,9 +72,9 @@ spec:
                 container('dind') {
                     script{
                         dir('bookmyshow-app'){
-                            sh 'docker build -t nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1 .'
-                            sh 'docker push nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1'
-                            sh 'docker pull nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1'
+                            //sh 'docker build -t nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1 .'
+                            //sh 'docker push nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1'
+                            //sh 'docker pull nexus-service-for-docker-hosted-registry.school-ns.svc.cluster.local:8085/my-repository/bookmyshowapp:v1'
                             sh 'docker image ls'
                         }
                     }
